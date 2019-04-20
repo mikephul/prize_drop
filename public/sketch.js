@@ -8,28 +8,32 @@
 var Engine = Matter.Engine,
   World = Matter.World,
   Events = Matter.Events,
-  Bodies = Matter.Bodies;
+  Bodies = Matter.Bodies,
+  MouseConstraint = Matter.MouseConstraint;
 
 var engine;
 var world;
 var particles = [];
 var plinkos = [];
 var boundaries = [];
-var cols = 10;
+
+var cols = 25;
 var rows = 10;
 
 // var ding;
-
-// function preload() {
-//   ding = loadSound("subway.mp3");
-// }
+var img;
+function preload() {
+  //   ding = loadSound("subway.mp3");
+  img = loadImage("gopher_dance.gif");
+}
 
 // function mousePressed() {
 //   ding.play();
 // }
 
 function setup() {
-  createCanvas(600, 800);
+  createCanvas(1500, 800);
+
   engine = Engine.create();
   world = engine.world;
   world.gravity.y = 2;
@@ -47,7 +51,14 @@ function setup() {
       }
     }
   }
-  Events.on(engine, "collisionStart", collision);
+  //   Events.on(engine, "collisionStart", collision);
+
+  Events.on(engine, "tick", function(event) {
+    console.log(event);
+    if (mouseConstraint.mouse.button == 0) {
+      alert("what is clicked?");
+    }
+  });
 
   newParticle();
   var spacing = width / cols;
@@ -58,17 +69,18 @@ function setup() {
         x += spacing / 2;
       }
       var y = spacing + i * spacing;
-      plinkos.push(new Plinko(x, y, 16));
+      plinkos.push(new Plinko(x, y, 6));
     }
   }
 
-  var b = new Boundary(width / 2, height + 50, width, 100);
-  boundaries.push(b);
-
-  for (var i = 0; i < cols + 2; i++) {
-    var x = i * spacing;
+  // Floor
+  var floor = new Boundary(width / 2, height + 50, width, 100);
+  boundaries.push(floor);
+  var num_buckets = 5;
+  for (var i = 0; i < num_buckets + 1; i++) {
+    var x = (i * width) / num_buckets;
     var h = 100;
-    var w = 10;
+    var w = 5;
     var y = height - h / 2;
     var b = new Boundary(x, y, w, h);
     boundaries.push(b);
@@ -76,7 +88,7 @@ function setup() {
 }
 
 function newParticle() {
-  var p = new Particle(300, 0, 10);
+  var p = new Particle(width / 2, 0, 10);
   particles.push(p);
 }
 
@@ -96,6 +108,7 @@ function draw() {
   }
   plinkos.map(p => p.show());
   boundaries.map(b => b.show());
+  image(img, 0, 0);
   //   ellipse(mouseX, mouseY, 60, 60);
 }
 
