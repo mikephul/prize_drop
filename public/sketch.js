@@ -17,8 +17,8 @@ var particles = [];
 var plinkos = [];
 var boundaries = [];
 
-var cols = 12;
-var rows = 5;
+var cols = 8;
+var rows = 3;
 
 // var ding;
 var img;
@@ -32,11 +32,27 @@ function preload() {
 // }
 
 function setup() {
-  createCanvas(1500, 800);
+  var canvasWidth = 1500;
+  var canvasHeight = 800;
+  createCanvas(canvasWidth, canvasHeight);
 
   engine = Engine.create();
   world = engine.world;
-  world.gravity.y = 1;
+  world.gravity.y = 0.3;
+  var wallOption = {
+    restitution: 0,
+    density: 0,
+    friction: 1,
+    isStatic: true
+  };
+  var offset = 50;
+  World.add(world, [
+    // wall
+    Bodies.rectangle(canvasWidth / 2, 0, canvasWidth, offset, wallOption),
+    Bodies.rectangle(canvasWidth, canvasHeight / 2, offset, canvasHeight, wallOption),
+    Bodies.rectangle(0, canvasHeight / 2, offset, canvasHeight, wallOption),
+    Bodies.rectangle(canvasWidth / 2, canvasHeight + (offset/2), canvasWidth, offset, wallOption)
+  ]);
 
   // socket
   socket = io.connect('http://localhost:3000');
@@ -44,7 +60,7 @@ function setup() {
     // When we receive data
     function(data) {
       data.map((angle, elementIndex) => {
-        Body.set(plinkos[elementIndex].body, 'angle', angle);
+        Body.setAngle(plinkos[elementIndex].body, angle);
       });
     }
   );
@@ -82,29 +98,25 @@ function setup() {
       var y = spacing + i * spacing;
       plinkos.push(new Plinko(x, y, 6));
       
-      // set button
+      // set button next
       var node = document.createElement("BUTTON");
       document.body.appendChild(node);
-      node.style.position = 'absolute';
+      node.className = 'arrow';
       node.style.top = (y - 25) + 'px';
-      node.style.left = (x - 25) + 'px';
-      node.style.width = '50px';
-      node.style.height = '50px';
-      node.style.border = '1px solid red';
-      node.style.background = 'transparent';
+      node.style.left = x + 'px';
       node.setAttribute('data-element-id', plinkos.length - 1);
-      node.onclick = function() {
-        var elementIndex = this.getAttribute('data-element-id');
-        var angle = Math.PI / 6;
-        var stateOfAngles = [];
-        plinkos.map(({ body }) => {
-          stateOfAngles.push(body.angle);
-        });
-        stateOfAngles[elementIndex] += angle;
-        socket.emit("stateOfAnglesChanged", stateOfAngles);
-        Body.set(plinkos[elementIndex].body, 'angle', stateOfAngles[elementIndex]);
-      }
-      // set button
+      node.onclick = rotateNext;
+      // set button next
+
+      // set button next
+      var node = document.createElement("BUTTON");
+      document.body.appendChild(node);
+      node.className = 'arrow';
+      node.style.top = (y - 25) + 'px';
+      node.style.left = x - 50 + 'px';
+      node.setAttribute('data-element-id', plinkos.length - 1);
+      node.onclick = rotatePre;
+      // set button next
     }
   }
 
@@ -125,6 +137,30 @@ function setup() {
     var b = new Boundary(x, y, w, h);
     boundaries.push(b);
   }
+}
+
+function rotateNext() {
+  var elementIndex = this.getAttribute('data-element-id');
+  var angle = Math.PI / 10;
+  var stateOfAngles = [];
+  plinkos.map(({ body }) => {
+    stateOfAngles.push(body.angle);
+  });
+  stateOfAngles[elementIndex] += angle;
+  socket.emit("stateOfAnglesChanged", stateOfAngles);
+  Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex]);
+}
+
+function rotatePre() {
+  var elementIndex = this.getAttribute('data-element-id');
+  var angle = Math.PI / 10;
+  var stateOfAngles = [];
+  plinkos.map(({ body }) => {
+    stateOfAngles.push(body.angle);
+  });
+  stateOfAngles[elementIndex] -= angle;
+  socket.emit("stateOfAnglesChanged", stateOfAngles);
+  Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex]);
 }
 
 function newParticle() {
