@@ -1,8 +1,8 @@
 function Particle(x, y, r) {
   var options = {
-    restitution: 0.5,
-    friction: 0,
-    density: 1
+    restitution: 1.2,
+    friction: 0.3,
+    density: 1.2,
   };
   x += random(-1, 1);
   this.body = Bodies.circle(x, y, r, options);
