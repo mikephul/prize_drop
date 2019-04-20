@@ -101,7 +101,7 @@ function setup() {
       // set button next
       var node = document.createElement("BUTTON");
       document.body.appendChild(node);
-      node.className = 'arrow';
+      node.className = 'arrow arrow-right';
       node.style.top = (y - 25) + 'px';
       node.style.left = x + 'px';
       node.setAttribute('data-element-id', plinkos.length - 1);
@@ -111,7 +111,7 @@ function setup() {
       // set button next
       var node = document.createElement("BUTTON");
       document.body.appendChild(node);
-      node.className = 'arrow';
+      node.className = 'arrow arrow-left';
       node.style.top = (y - 25) + 'px';
       node.style.left = x - 50 + 'px';
       node.setAttribute('data-element-id', plinkos.length - 1);
