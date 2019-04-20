@@ -5,13 +5,14 @@ function Plinko(x, y, r) {
     isStatic: true
   };
   this.body = Bodies.circle(x, y, r, options);
+  this.body.label = "plinko";
   this.r = r;
   World.add(world, this.body);
 }
 
 Plinko.prototype.show = function() {
-  fill(0, 255, 0);
-  stroke(255);
+  fill(127);
+  noStroke();
   var pos = this.body.position;
   push();
   translate(pos.x, pos.y);

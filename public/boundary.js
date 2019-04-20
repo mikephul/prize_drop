@@ -9,11 +9,12 @@ function Boundary(x, y, w, h) {
 }
 
 Boundary.prototype.show = function() {
-  fill(0, 255, 0);
+  fill(255);
   stroke(255);
   var pos = this.body.position;
   push();
   translate(pos.x, pos.y);
+  rectMode(CENTER);
   rect(0, 0, this.w, this.h);
   pop();
 };
