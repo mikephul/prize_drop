@@ -3,8 +3,11 @@
 
 // Using express: http://expressjs.com/
 var express = require("express");
+var path = require('path');
 // Create the app
 var app = express();
+app.set('views', path.resolve('public'));
+app.set('view engine', 'ejs');
 
 // Set up the server
 // process.env.PORT is related to deploying on heroku
@@ -17,7 +20,13 @@ function listen() {
   console.log("Example app listening at http://" + host + ":" + port);
 }
 
+var shareStateOfAngles = [];
+
 app.use(express.static("public"));
+
+app.get('/', function(req, res) {
+  res.render('index', { shareStateOfAngles: shareStateOfAngles });
+});
 
 // WebSocket Portion
 // WebSockets work with the HTTP server
@@ -25,16 +34,18 @@ var io = require("socket.io")(server);
 
 // Register a callback function to run when we have an individual connection
 // This is run for each individual user that connects
+
+
 io.sockets.on(
   "connection",
   // We are given a websocket object in our function
   function(socket) {
     console.log("We have a new client: " + socket.id);
-
+    
     // When this user emits, client side: socket.emit('otherevent',some data);
     socket.on("stateOfAnglesChanged", function(data) {
-
-      socket.broadcast.emit("stateOfAnglesChanged", data);
+      shareStateOfAngles = data;
+      socket.broadcast.emit("stateOfAnglesChanged", shareStateOfAngles);
 
       // This is a way to send to everyone including sender
       // io.sockets.emit('message', "this goes to everyone");

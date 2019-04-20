@@ -18,7 +18,7 @@ var plinkos = [];
 var boundaries = [];
 
 var cols = 12;
-var rows = 10;
+var rows = 5;
 
 // var ding;
 var img;
@@ -36,14 +36,13 @@ function setup() {
 
   engine = Engine.create();
   world = engine.world;
-  world.gravity.y = 2;
+  world.gravity.y = 1;
 
   // socket
   socket = io.connect('http://localhost:3000');
   socket.on('stateOfAnglesChanged',
     // When we receive data
     function(data) {
-      console.log('recive', data);
       data.map((angle, elementIndex) => {
         Body.set(plinkos[elementIndex].body, 'angle', angle);
       });
@@ -108,6 +107,11 @@ function setup() {
       // set button
     }
   }
+
+  // init all angles
+  shareStateOfAngles.map((angle, elementIndex) => {
+    Body.set(plinkos[elementIndex].body, 'angle', angle);
+  });
 
   // Floor
   var floor = new Boundary(width / 2, height + 50, width, 100);
