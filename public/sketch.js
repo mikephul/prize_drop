@@ -3,13 +3,13 @@
 // // Daniel Shiffman
 
 // // Keep track of our socket connection
-// var socket;
+var socket;
 // https://codepen.io/jelito/pen/KWWENp
 var Engine = Matter.Engine,
   World = Matter.World,
   Events = Matter.Events,
   Bodies = Matter.Bodies,
-  MouseConstraint = Matter.MouseConstraint;
+  Body = Matter.Body;
 
 var engine;
 var world;
@@ -17,7 +17,7 @@ var particles = [];
 var plinkos = [];
 var boundaries = [];
 
-var cols = 25;
+var cols = 12;
 var rows = 10;
 
 // var ding;
@@ -37,6 +37,18 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
   world.gravity.y = 2;
+
+  // socket
+  socket = io.connect('http://localhost:3000');
+  socket.on('stateOfAnglesChanged',
+    // When we receive data
+    function(data) {
+      console.log('recive', data);
+      data.map((angle, elementIndex) => {
+        Body.set(plinkos[elementIndex].body, 'angle', angle);
+      });
+    }
+  );
 
   function collision(event) {
     var pairs = event.pairs;
@@ -70,6 +82,30 @@ function setup() {
       }
       var y = spacing + i * spacing;
       plinkos.push(new Plinko(x, y, 6));
+      
+      // set button
+      var node = document.createElement("BUTTON");
+      document.body.appendChild(node);
+      node.style.position = 'absolute';
+      node.style.top = (y - 25) + 'px';
+      node.style.left = (x - 25) + 'px';
+      node.style.width = '50px';
+      node.style.height = '50px';
+      node.style.border = '1px solid red';
+      node.style.background = 'transparent';
+      node.setAttribute('data-element-id', plinkos.length - 1);
+      node.onclick = function() {
+        var elementIndex = this.getAttribute('data-element-id');
+        var angle = Math.PI / 6;
+        var stateOfAngles = [];
+        plinkos.map(({ body }) => {
+          stateOfAngles.push(body.angle);
+        });
+        stateOfAngles[elementIndex] += angle;
+        socket.emit("stateOfAnglesChanged", stateOfAngles);
+        Body.set(plinkos[elementIndex].body, 'angle', stateOfAngles[elementIndex]);
+      }
+      // set button
     }
   }
 
@@ -111,27 +147,3 @@ function draw() {
   image(img, 0, 0);
   //   ellipse(mouseX, mouseY, 60, 60);
 }
-
-// function mouseDragged() {
-//   // Draw some white circles
-//   fill(255);
-//   noStroke();
-//   ellipse(mouseX, mouseY, 20, 20);
-//   // Send the mouse coordinates
-//   sendmouse(mouseX, mouseY);
-// }
-
-// // Function for sending to the socket
-// function sendmouse(xpos, ypos) {
-//   // We are sending!
-//   console.log("sendmouse: " + xpos + " " + ypos);
-
-//   // Make a little object with  and y
-//   var data = {
-//     x: xpos,
-//     y: ypos
-//   };
-
-//   // Send that object to the socket
-//   socket.emit("mouse", data);
-// }

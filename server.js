@@ -32,12 +32,9 @@ io.sockets.on(
     console.log("We have a new client: " + socket.id);
 
     // When this user emits, client side: socket.emit('otherevent',some data);
-    socket.on("mouse", function(data) {
-      // Data comes in as whatever was sent, including objects
-      console.log("Received: 'mouse' " + data.x + " " + data.y);
+    socket.on("stateOfAnglesChanged", function(data) {
 
-      // Send it to all other clients
-      socket.broadcast.emit("mouse", data);
+      socket.broadcast.emit("stateOfAnglesChanged", data);
 
       // This is a way to send to everyone including sender
       // io.sockets.emit('message', "this goes to everyone");

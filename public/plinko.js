@@ -1,12 +1,10 @@
-function Plinko(x, y, r) {
+function Plinko(x, y) {
   var options = {
-    restitution: 1,
-    friction: 0,
     isStatic: true
   };
-  this.body = Bodies.circle(x, y, r, options);
-  this.body.label = "plinko";
-  this.r = r;
+  this.w = 120;
+  this.h = 10;
+  this.body = Bodies.rectangle(x, y, this.w, this.h, options);
   World.add(world, this.body);
 }
 
@@ -16,6 +14,8 @@ Plinko.prototype.show = function() {
   var pos = this.body.position;
   push();
   translate(pos.x, pos.y);
-  ellipse(0, 0, this.r * 2);
+  rectMode(CENTER);
+  rotate(this.body.angle);
+  rect(0, 0, this.w, this.h);
   pop();
 };
