@@ -101,7 +101,7 @@ function setup() {
       
       // set button rotate right
       var node = document.createElement("BUTTON");
-      document.body.appendChild(node);
+      document.getElementById('button-box').appendChild(node);
       node.className = 'arrow arrow-right';
       node.style.top = (y - 25) + 'px';
       node.style.left = x + 'px';
@@ -110,7 +110,7 @@ function setup() {
 
       // set button rotate left
       var node = document.createElement("BUTTON");
-      document.body.appendChild(node);
+      document.getElementById('button-box').appendChild(node);
       node.className = 'arrow arrow-left';
       node.style.top = (y - 25) + 'px';
       node.style.left = x - 50 + 'px';
@@ -147,7 +147,7 @@ function setup() {
       
       // set button rotate right
       var node = document.createElement("BUTTON");
-      document.body.appendChild(node);
+      document.getElementById('button-box').appendChild(node);
       node.className = 'arrow arrow-right';
       node.style.top = (y - 25) + 'px';
       node.style.left = x + 'px';
@@ -156,7 +156,7 @@ function setup() {
 
       // set button rotate left
       var node = document.createElement("BUTTON");
-      document.body.appendChild(node);
+      document.getElementById('button-box').appendChild(node);
       node.className = 'arrow arrow-left';
       node.style.top = (y - 25) + 'px';
       node.style.left = x - 50 + 'px';
