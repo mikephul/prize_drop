@@ -15,6 +15,7 @@ var engine;
 var world;
 var particles = [];
 var plinkos = [];
+var staticPlinkos = [];
 var boundaries = [];
 
 var cols = 8;
@@ -33,12 +34,12 @@ function preload() {
 
 function setup() {
   var canvasWidth = 1500;
-  var canvasHeight = 800;
+  var canvasHeight = 2400;
   createCanvas(canvasWidth, canvasHeight);
 
   engine = Engine.create();
   world = engine.world;
-  world.gravity.y = 0.3;
+  world.gravity.y = 1;
   var wallOption = {
     restitution: 0,
     density: 0,
@@ -88,6 +89,8 @@ function setup() {
   });
 
   newParticle();
+
+  // dynamic plinko lv1
   var spacing = width / cols;
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols + 1; j++) {
@@ -98,7 +101,7 @@ function setup() {
       var y = spacing + i * spacing;
       plinkos.push(new Plinko(x, y, 6));
       
-      // set button next
+      // set button rotate right
       var node = document.createElement("BUTTON");
       document.body.appendChild(node);
       node.className = 'arrow arrow-right';
@@ -106,9 +109,8 @@ function setup() {
       node.style.left = x + 'px';
       node.setAttribute('data-element-id', plinkos.length - 1);
       node.onclick = rotateNext;
-      // set button next
 
-      // set button next
+      // set button rotate left
       var node = document.createElement("BUTTON");
       document.body.appendChild(node);
       node.className = 'arrow arrow-left';
@@ -116,9 +118,70 @@ function setup() {
       node.style.left = x - 50 + 'px';
       node.setAttribute('data-element-id', plinkos.length - 1);
       node.onclick = rotatePre;
-      // set button next
     }
   }
+
+  // static plinko lv1
+  var colsOfStaticPlinko = 35;
+  var rowsOfStaticPlinko = 8;
+  var spacing = width / colsOfStaticPlinko;
+  for (var i = 0; i < rowsOfStaticPlinko; i++) {
+    for (var j = 0; j < colsOfStaticPlinko + 1; j++) {
+      var x = j * spacing;
+      if (i % 2 == 1) {
+        x += spacing / 2;
+      }
+      var y = (spacing + i * spacing) + 750;
+      staticPlinkos.push(new StaticPlinko(x, y, 8));
+    }
+  }
+
+  // dynamic plinko lv2
+  spacing = width / cols;
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols + 1; j++) {
+      var x = j * spacing;
+      if (i % 2 == 1) {
+        x += spacing / 2;
+      }
+      var y = (spacing + i * spacing) + 1100;
+      plinkos.push(new Plinko(x, y, 6));
+      
+      // set button rotate right
+      var node = document.createElement("BUTTON");
+      document.body.appendChild(node);
+      node.className = 'arrow arrow-right';
+      node.style.top = (y - 25) + 'px';
+      node.style.left = x + 'px';
+      node.setAttribute('data-element-id', plinkos.length - 1);
+      node.onclick = rotateNext;
+
+      // set button rotate left
+      var node = document.createElement("BUTTON");
+      document.body.appendChild(node);
+      node.className = 'arrow arrow-left';
+      node.style.top = (y - 25) + 'px';
+      node.style.left = x - 50 + 'px';
+      node.setAttribute('data-element-id', plinkos.length - 1);
+      node.onclick = rotatePre;
+    }
+  }
+
+  // static plinko lv3
+  colsOfStaticPlinko = 40;
+  rowsOfStaticPlinko = 8;
+  var spacing = width / colsOfStaticPlinko;
+  for (var i = 0; i < rowsOfStaticPlinko; i++) {
+    for (var j = 0; j < colsOfStaticPlinko + 1; j++) {
+      var x = j * spacing;
+      if (i % 2 == 1) {
+        x += spacing / 2;
+      }
+      var y = (spacing + i * spacing) + 1820;
+      staticPlinkos.push(new StaticPlinko(x, y, 8));
+    }
+  }
+
 
   // init all angles
   shareStateOfAngles.map((angle, elementIndex) => {
@@ -183,6 +246,7 @@ function draw() {
     }
   }
   plinkos.map(p => p.show());
+  staticPlinkos.map(p => p.show());
   boundaries.map(b => b.show());
   image(img, 0, 0);
   //   ellipse(mouseX, mouseY, 60, 60);
