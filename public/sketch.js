@@ -86,7 +86,7 @@ function setup() {
     }
   });
 
-  newParticle();
+  // newParticle();
 
   // dynamic plinko lv1
   var spacing = width / cols;
@@ -223,15 +223,17 @@ function rotatePre() {
   Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex] || 0);
 }
 
-function newParticle() {
-  var p = new Particle(width / 2, 0, 10);
+function newParticle(x) {
+  if (x < 100) x = 100;
+  if (x > 1400) x = 1400;
+  var p = new Particle(x, 10, 10);
   particles.push(p);
 }
 
 function draw() {
-  if (frameCount % 300 == 0) {
-    newParticle();
-  }
+  // if (frameCount % 300 == 0) {
+  //   newParticle();
+  // }
   background(51);
   Engine.update(engine);
   for (var i = 0; i < particles.length; i++) {
