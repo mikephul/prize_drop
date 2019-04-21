@@ -21,11 +21,52 @@ function listen() {
 }
 
 var shareStateOfAngles = [];
+var shareStateOfBuckets = [
+  "Keyboard",
+  "Mouse",
+  "Desk Mat",
+  "Desk Mat",
+  "Desk Mat",
+  "Whiteboard",
+  "Whiteboard",
+  "Mug",
+  "Mug",
+  "LCD Board",
+  "LCD Board",
+  "Martin Ticket",
+  "GCP Credit",
+  "A4 Box",
+  "Paper Cat",
+  "Paper Cat",
+  "yourname.dev",
+  "Enter Key",
+  "Punching ball",
+  "Laptop desk",
+  "Laptop desk",
+  "Node Lite",
+  "Node Lite",
+  "Node Lite",
+  "Raspberry PI",
+  "DOY Google Home"
+];
+
+shareStateOfBuckets = shuffle(shareStateOfBuckets);
+
+function shuffle(a) {
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = a[i];
+      a[i] = a[j];
+      a[j] = x;
+  }
+  return a;
+}
 
 app.use(express.static("public"));
 
 app.get('/', function(req, res) {
-  res.render('index', { shareStateOfAngles: shareStateOfAngles });
+  res.render('index', { shareStateOfAngles: shareStateOfAngles, shareStateOfBuckets: shareStateOfBuckets });
 });
 
 // WebSocket Portion

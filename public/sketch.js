@@ -17,6 +17,7 @@ var particles = [];
 var plinkos = [];
 var staticPlinkos = [];
 var boundaries = [];
+var texts = [];
 
 var cols = 8;
 var rows = 3;
@@ -188,13 +189,20 @@ function setup() {
   // Floor
   var floor = new Boundary(width / 2, height + 50, width, 100);
   boundaries.push(floor);
-  var num_buckets = 5;
-  for (var i = 0; i < num_buckets + 1; i++) {
+
+  // init buckets
+  setBucket(shareStateOfBuckets);
+}
+
+function setBucket(array) {
+  var num_buckets = array.length;
+  for (var i = 0; i < num_buckets; i++) {
     var x = (i * width) / num_buckets;
     var h = 100;
     var w = 5;
     var y = height - h / 2;
     var b = new Boundary(x, y, w, h);
+    texts.push(new Text(shareStateOfBuckets[i], x + 12, y + h/2))
     boundaries.push(b);
   }
 }
@@ -246,7 +254,8 @@ function draw() {
   }
   plinkos.map(p => p.show());
   staticPlinkos.map(p => p.show());
-  boundaries.map(b => b.show());
-  image(img, 0, 0);
-  //   ellipse(mouseX, mouseY, 60, 60);
+  boundaries.map(b => b.show());  
+  
+  texts.map(t => t.show());  
+  // console.log(texts)
 }
