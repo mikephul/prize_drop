@@ -56,13 +56,11 @@ function setup() {
   ]);
 
   // socket
-  socket = io.connect('http://localhost:3000');
+  socket = io.connect();
   socket.on('stateOfAnglesChanged',
     // When we receive data
     function(data) {
-      data.map((angle, elementIndex) => {
-        Body.setAngle(plinkos[elementIndex].body, angle);
-      });
+      Body.setAngle(plinkos[data.elementIndex].body, data.angle);
     }
   );
 
@@ -182,7 +180,6 @@ function setup() {
     }
   }
 
-
   // init all angles
   shareStateOfAngles.map((angle, elementIndex) => {
     Body.set(plinkos[elementIndex].body, 'angle', angle);
@@ -210,8 +207,8 @@ function rotateNext() {
     stateOfAngles.push(body.angle);
   });
   stateOfAngles[elementIndex] += angle;
-  socket.emit("stateOfAnglesChanged", stateOfAngles);
-  Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex]);
+  socket.emit("stateOfAnglesChanged", { elementIndex, angle: stateOfAngles[elementIndex] });
+  Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex] || 0);
 }
 
 function rotatePre() {
@@ -222,8 +219,8 @@ function rotatePre() {
     stateOfAngles.push(body.angle);
   });
   stateOfAngles[elementIndex] -= angle;
-  socket.emit("stateOfAnglesChanged", stateOfAngles);
-  Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex]);
+  socket.emit("stateOfAnglesChanged", { elementIndex, angle: stateOfAngles[elementIndex] });
+  Body.setAngle(plinkos[elementIndex].body, stateOfAngles[elementIndex] || 0);
 }
 
 function newParticle() {

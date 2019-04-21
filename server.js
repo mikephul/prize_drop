@@ -44,8 +44,8 @@ io.sockets.on(
     
     // When this user emits, client side: socket.emit('otherevent',some data);
     socket.on("stateOfAnglesChanged", function(data) {
-      shareStateOfAngles = data;
-      socket.broadcast.emit("stateOfAnglesChanged", shareStateOfAngles);
+      shareStateOfAngles[data.elementIndex] = data.angle;
+      socket.broadcast.emit("stateOfAnglesChanged", data);
 
       // This is a way to send to everyone including sender
       // io.sockets.emit('message', "this goes to everyone");
